@@ -127,3 +127,10 @@ curl -X GET \
   "status": 1
 }
 ```
+
+### 银行编码
+
+`extra.bank_code`
+
+请咨询客服。
+

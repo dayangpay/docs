@@ -127,3 +127,9 @@ curl -X GET \
   "status": 1
 }
 ```
+
+### Bank codes
+
+`extra.bank_code`
+
+Please contact our support team. 
