@@ -1,29 +1,35 @@
 # Send money
 
+This API allows you to send money to a specified account.
+
+## Request
+
+### HTTP Method & Endpoint
+
 POST `/api/v1/transfers`
 
-### HTTP headers <Badge type="tip" text="Header" vertical="top" />
+### Headers <Badge type="tip" text="Header" vertical="top" />
 
-| Key          | Value              |
-|--------------|--------------------|
-| Accept       | `application/json` |
-| Content-Type | `application/json` |
+| Key          | Value              | Description                                 |
+|--------------|--------------------|---------------------------------------------|
+| Accept       | `application/json` | Specifies that the response format is JSON. |
+| Content-Type | `application/json` | Indicates that the request body is JSON.    |
 
-### Body parameters <Badge type="tip" text="Body" vertical="top" />
+### Request Body parameters <Badge type="tip" text="Body" vertical="top" />
 
-| Key             | Type   | Required    | Sign | Description                                                       |
-|-----------------|--------|-------------|------|-------------------------------------------------------------------|
-| client_key      | string | Yes         | Yes  | The API access key.                                               |
-| amount          | string | Yes         | Yes  | The amount for send money.                                        |
-| channel_id      | string | Yes         | Yes  | The payment method.                                               |
-| out_transfer_no | string | Yes         | Yes  | The transaction ID you provided. **Must be a unique identifier**. |
-| notify_url      | string | Yes         | Yes  | The webhook URL you provided.                                     |
-| payee_account   | string | Yes         | Yes  | Send money to the account.                                        |
-| payee_name      | string | Yes         | Yes  | Full name for the account.                                        |
-| extra           | string | Required If | Yes  | Extra parameters. **MUST be a valid JSON string**.                |
-| signature       | string | Yes         | No   | Signed value.                                                     |
+| Key             | Type   | Required    | Signed | Description                                             |
+|-----------------|--------|-------------|--------|---------------------------------------------------------|
+| client_key      | string | Yes         | Yes    | The API access key.                                     |
+| amount          | string | Yes         | Yes    | The amount to send.                                     |
+| channel_id      | string | Yes         | Yes    | The payment method identifier.                          |
+| out_transfer_no | string | Yes         | Yes    | 	The unique transaction ID provided by you.             |
+| notify_url      | string | Yes         | Yes    | The webhook URL for transaction status updates.         |
+| payee_account   | string | Yes         | Yes    | The recipient's account number.                         |
+| payee_name      | string | Yes         | Yes    | The full name of the recipient.                         |
+| extra           | string | Required If | Yes    | Additional parameters, **MUST be a valid JSON string**. |
+| signature       | string | Yes         | No     | The signed value for request verification.              |
 
-### Request example
+## Request example
 
 ```shell{8,13}
 curl -X POST \
@@ -43,18 +49,20 @@ curl -X POST \
   }'
 ```
 
+## Response
+
 ### Response parameters
 
-| Key             | Type   | Description                            |
-| --------------- | ------ | -------------------------------------- |
-| client_key      | string | The API access key.                    |
-| amount          | string | The amount for send money.             |
-| transfer_no     | string | The transaction ID DaYangPay provided. |
-| out_transfer_no | string | The transaction ID you provided.       |
-| channel_id      | string | The payment method.                    |
-| payee_account   | string | Send money to the account.             |
-| payee_name      | string | Full name for the account.             |
-| created_at      | string | Created time. `UTC±00:00`              |
+| Key             | Type   | Description                                   |
+|-----------------|--------|-----------------------------------------------|
+| client_key      | string | The API access key.                           |
+| amount          | string | The amount sent.                              |
+| transfer_no     | string | The transaction ID provided by our system.    |
+| out_transfer_no | string | The transaction ID provided by your system.   |
+| channel_id      | string | The payment method.                           |
+| payee_account   | string | The recipient's account number.               |
+| payee_name      | string | The full name of the recipient.               |
+| created_at      | string | The transaction creation time in `UTC±00:00`. |
 
 ### Response example
 
@@ -70,7 +78,6 @@ curl -X POST \
   "created_at": "2023-01-01T01:01:01.000000Z"
 }
 ```
-
 
 ### How to Determine if the Order Was Successfully Placed?
 
@@ -153,13 +160,15 @@ public class HttpClientExample {
 :::
 
 
-### Important Information
+## Important Notes
 
 ::: warning Important
-Due to communication issues, when you request DaYangPay, there may be a timeout, or you may not receive any response. However, in reality, DaYangPay has responded normally. In this case, to avoid any loss of funds, you should set your transaction status to 'successful' and not process it through other third parties.
+In some cases, due to potential communication issues, you may possibly experience timeouts or not receive a response when making requests to our system. However, the request may have been processed successfully on our end. To prevent any discrepancies and ensure transaction accuracy, we recommend marking the transaction as successful and avoiding reprocessing it through other third parties.
 :::
 
-Communication Test Example with the DaYangPay Server:
+## Testing Server Communication
+
+To analyze network latency, use the following `curl` command:
 
 ```bash
 curl -X POST \
@@ -180,7 +189,7 @@ curl -X POST \
   -w "\n\nDNS Lookup: %{time_namelookup}s\nConnection: %{time_connect}s\nPretransfer: %{time_pretransfer}s\nStart Transfer: %{time_starttransfer}s\nTotal Time: %{time_total}s\n"
 ```
 
-Output:
+Example Output:
 
 ```text
 DNS Lookup: 0.001148s

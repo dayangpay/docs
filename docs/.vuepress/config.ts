@@ -1,7 +1,15 @@
+import process from 'node:process'
 import { viteBundler } from '@vuepress/bundler-vite'
 import { defaultTheme } from '@vuepress/theme-default'
+import { registerComponentsPlugin } from '@vuepress/plugin-register-components'
+import { loadEnv } from 'vite'
 import { defineUserConfig } from 'vuepress'
+import { path } from 'vuepress/utils'
 import { navbar, navbarZh, sidebar, sidebarZh } from './configs'
+
+// development production
+const mode = process.env.NODE_ENV || 'production'
+const env = loadEnv(mode, process.cwd(), 'VITE_')
 
 export default defineUserConfig({
   base: '/',
@@ -9,8 +17,8 @@ export default defineUserConfig({
   locales: {
     '/': {
       lang: 'en-US',
-      title: 'DaYangPay',
-      description: ' Documentation for Merchants',
+      title: env.VITE_VUEPRESS_TITLE || 'DaYangPay',
+      description: env.VITE_VUEPRESS_DESCRIPTION || 'Documentation for Merchants',
     },
     '/zh/': {
       lang: 'zh-CN',
@@ -44,4 +52,11 @@ export default defineUserConfig({
       },
     },
   }),
+
+  plugins: [
+    registerComponentsPlugin({
+      componentsDir: path.resolve(__dirname, './components'),
+    }),
+  ],
+
 })

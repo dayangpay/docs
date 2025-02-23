@@ -1,12 +1,18 @@
-# DaYangPay Balance
+# Get balances
+
+This API endpoint retrieves the account balances, including available and locked funds.
+
+## Request
+
+### HTTP Method & Endpoint
 
 GET `/api/v1/user/balances`
 
 ### HTTP headers <Badge type="tip" text="Header" vertical="top" />
 
-| Key    | Value              |
-| ------ | ------------------ |
-| Accept | `application/json` |
+| Key    | Value              | Description                                        |
+|--------|--------------------|----------------------------------------------------|
+| Accept | `application/json` | Specifies that the response format should be JSON. |
 
 ### Query parameters <Badge type="tip" text="Query" vertical="top" />
 
@@ -23,14 +29,16 @@ curl -X GET \
   -H "Accept: application/json"
 ```
 
+## Response
+
 ### Response parameters
 
-| Key             | Type   | Description                      |
-| --------------- | ------ | -------------------------------- |
-| client_key      | string | The API access key.              |
-| available_funds | string | Available funds of your account. |
-| locked_funds    | string | Locked funds of your account.    |
-| currency        | string | The currency code.               |
+| Key             | Type   | Description                           |
+|-----------------|--------|---------------------------------------|
+| client_key      | string | The API access key.                   |
+| available_funds | string | The amount of funds available.        |
+| locked_funds    | string | The amount of funds currently locked. |
+| currency        | string | The currency code (e.g., BRL, VND).   |
 
 ### Response example
 

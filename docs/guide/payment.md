@@ -1,5 +1,9 @@
 # Receive money
 
+## Request
+
+### HTTP Method & Endpoint
+
 POST `/api/v1/trades`
 
 ### HTTP headers <Badge type="tip" text="Header" vertical="top" />
@@ -21,7 +25,7 @@ POST `/api/v1/trades`
 | extra        | string | No       | Yes  | Extra parameters. **MUST be a valid JSON string**.                |
 | signature    | string | Yes      | No   | Signed value.                                                     |
 
-### Request example
+## Request example
 
 :::warning NOTE
 Not every request requires the `extra` parameter,
@@ -44,6 +48,8 @@ curl -X POST \
     "signature": "32db0797717edf25775a95cbbf61c4f693b47604a309fb63d46e36faf75e58ce"
   }'
 ```
+
+## Response
 
 ### Response parameters
 

@@ -1,5 +1,7 @@
 # Introduction
 
+<AppName />
+
 ## APIs
 
 ### Receive money

@@ -1,27 +1,33 @@
-# Get a transaction for receive money
+# Get a Transaction for Receiving Money
+
+This API retrieves details of a specific transaction, including its status and payment details.
+
+## Request
+
+### HTTP Method & Endpoint
 
 GET `/api/v1/trades/:trade`
 
 ### HTTP Headers <Badge type="tip" text="Header" vertical="top" />
 
-| Key    | Value              |
-|--------|--------------------|
-| Accept | `application/json` |
+| Key    | Value              | Description                                        |
+|--------|--------------------|----------------------------------------------------|
+| Accept | `application/json` | Specifies that the response format should be JSON. |
 
 ### Path parameters <Badge type="tip" text="Path" vertical="top" />
 
-| Key   | Type   | Required | Sign | Description                                            |
-|-------|--------|----------|------|--------------------------------------------------------|
-| trade | string | Yes      | No   | The transaction ID you provided or DaYangPay provided. |
+| Key   | Type   | Required | Signed | Description                                               |
+|-------|--------|----------|--------|-----------------------------------------------------------|
+| trade | string | Yes      | No     | The transaction ID provided by your system or our system. |
 
 ### Query parameters <Badge type="tip" text="Query" vertical="top" />
 
-| Key        | Type   | Required | Sign | Description         |
-|------------|--------|----------|------|---------------------|
-| client_key | string | Yes      | Yes  | The API access key. |
-| signature  | string | Yes      | No   | Signed value.       |
+| Key        | Type   | Required | Signed | Description                  |
+|------------|--------|----------|--------|------------------------------|
+| client_key | string | Yes      | Yes    | The API access key.          |
+| signature  | string | Yes      | No     | Signed value for validation. |
 
-### Request example
+## Request example
 
 ```shell
 curl -X GET \
@@ -29,26 +35,28 @@ curl -X GET \
   -H "Accept: application/json"
 ```
 
+## Response
+
 ### Response parameters
 
-| Key          | Type    | Description                            |
-|--------------|---------|----------------------------------------|
-| client_key   | string  | The API access key.                    |
-| amount       | string  | The amount for receive money.          |
-| trade_no     | string  | The transaction ID DaYangPay provided. |
-| out_trade_no | string  | The transaction ID you provided.       |
-| payment_url  | string  | The Cashier URL.                       |
-| created_at   | string  | Created time. `UTC±00:00`              |
-| paid_at      | string  | Paid time. `UTC±00:00`                 |
-| status       | integer | The transaction status.                |
+| Key          | Type    | Description                                   |
+|--------------|---------|-----------------------------------------------|
+| client_key   | string  | The API access key.                           |
+| amount       | string  | The transaction amount received.              |
+| trade_no     | string  | The transaction ID provided by our system.    |
+| out_trade_no | string  | The transaction ID provided by your system.   |
+| payment_url  | string  | The URL of the cashier payment page.          |
+| created_at   | string  | The transaction creation time in `UTC±00:00`. |
+| paid_at      | string  | The transaction payment time in `UTC±00:00`.  |
+| status       | integer | The transaction status.                       |
 
-#### Status codes
+#### Transaction Status Codes
 
-| Code | Description |
-|------|-------------|
-| 0    | Unpaid      |
-| 1    | Paid        |
-| 2    | Expired     |
+| Status Code | Description |
+|-------------|-------------|
+| 0           | Unpaid      |
+| 1           | Paid        |
+| 2           | Expired     |
 
 ### Response example
 

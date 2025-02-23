@@ -1,34 +1,45 @@
-# Webhook for receive money
+# Webhook for Receiving Money
 
-Request method: `POST`
+This webhook is triggered when a transaction status updates to `Paid`.
 
-Content-Type: `application/json`
+## Request
+
+### Request method
+
+`POST`
+
+### Headers
+
+| Key          | Value              | Description                                        |
+|--------------|--------------------|----------------------------------------------------|
+| Accept       | `application/json` | Specifies that the response format should be JSON. | 
+| Content-Type | `application/json` | Indicates that the request body is in JSON format. |
 
 :::warning NOTE
-DaYangPay will request the webhook URL you provided when the transaction status is `Paid`.
+We will send a request to your webhook URL when the transaction status changes to `Paid`.
 :::
 
-### Body parameters <Badge type="tip" text="Body" vertical="top" />
+### Request Body Parameters <Badge type="tip" text="Body" vertical="top" />
 
-| Key          | Type    | Sign | Description                            |
-|--------------|---------|------|----------------------------------------|
-| client_key   | string  | Yes  | The API access key.                    |
-| signature    | string  | No   | Signed value.                          |
-| amount       | string  | Yes  | The amount for receive money.          |
-| channel_id   | string  | Yes  | The payment method.                    |
-| trade_no     | string  | Yes  | The transaction ID DaYangPay provided. |
-| out_trade_no | string  | Yes  | The transaction ID you provided.       |
-| created_at   | string  | Yes  | Created time. `UTC±00:00`              |
-| paid_at      | string  | Yes  | Paid time. `UTC±00:00`                 |
-| status       | integer | Yes  | The transaction status.                |
+| Key          | Type    | Signed | Description                                   |
+|--------------|---------|--------|-----------------------------------------------|
+| client_key   | string  | Yes    | The API access key.                           |
+| signature    | string  | No     | The signed value for request validation.      |
+| amount       | string  | Yes    | The transaction amount received.              |
+| channel_id   | string  | Yes    | The payment method identifier.                |
+| trade_no     | string  | Yes    | The transaction ID provided by our system.    |
+| out_trade_no | string  | Yes    | The transaction ID provided by your system.   |
+| created_at   | string  | Yes    | The transaction creation time in `UTC±00:00`. |
+| paid_at      | string  | Yes    | The transaction payment time in `UTC±00:00`.  |
+| status       | integer | Yes    | The transaction status.                       |
 
-#### Status code
+### Transaction Status Codes
 
-| Code | Description |
-|------|-------------|
-| 1    | Paid        |
+| Status Code | Description |
+|-------------|-------------|
+| 1           | Paid        |
 
-### Request example
+## Request example
 
 ```shell{11,14}
 curl -X POST \
@@ -48,15 +59,15 @@ curl -X POST \
   }'
 ```
 
+## Response
+
 ### Response parameters
 
-| Key  | Value   |
-|------|---------|
-| code | SUCCESS |
+| Key  | Value   | Description                               |
+|------|---------|-------------------------------------------|
+| code | SUCCESS | `SUCCESS` means the request was accepted. |
 
-The `code` is `SUCCESS` means the request is accepted. other code means that is failed.
-
-#### Example:
+### Response example
 
 HTTP Status code: `200`
 
