@@ -4,14 +4,15 @@ POST `/api/v1/transfers`
 
 ### HTTP headers <Badge type="tip" text="Header" vertical="top" />
 
-| Key    | Value              |
-| ------ | ------------------ |
-| Accept | `application/json` |
+| Key          | Value              |
+|--------------|--------------------|
+| Accept       | `application/json` |
+| Content-Type | `application/json` |
 
 ### Body parameters <Badge type="tip" text="Body" vertical="top" />
 
 | Key             | Type   | Required    | Sign | Description                                                       |
-| --------------- | ------ | ----------- | ---- | ----------------------------------------------------------------- |
+|-----------------|--------|-------------|------|-------------------------------------------------------------------|
 | client_key      | string | Yes         | Yes  | The API access key.                                               |
 | amount          | string | Yes         | Yes  | The amount for send money.                                        |
 | channel_id      | string | Yes         | Yes  | The payment method.                                               |
@@ -69,6 +70,88 @@ curl -X POST \
   "created_at": "2023-01-01T01:01:01.000000Z"
 }
 ```
+
+
+### How to Determine if the Order Was Successfully Placed?
+
+Check whether the HTTP response status code is `200` or `201`. Or verify if a specific field, such as `transfer_no` exists in the response.
+
+::: code-tabs
+
+@tab Java
+
+```java
+import com.google.gson.*;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
+public class HttpClientExample {
+    public static void main(String[] args) {
+        HttpClient client = HttpClient.newHttpClient();
+
+        // Create the request body (example, if needed, otherwise, you can remove this)
+        String requestBody = "{\"key\":\"value\"}";  // You can replace with actual data for POST request
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://example.com/api/v1/trades"))
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .build();
+
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            // Check if the HTTP status code is 200 ~ 299
+            int statusCode = response.statusCode();
+
+            if (statusCode >= 200 && statusCode <= 299) {
+                System.out.println("Success: " + statusCode);
+            } else {
+                System.out.println("Failed: " + statusCode);
+            }
+
+            // Check if a specific key exists in the JSON response, e.g., 'transfer_no'
+            String responseBody = response.body();
+            System.out.println("Response Body: " + responseBody);
+
+            if (isValidJson(responseBody)) {
+                Gson gson = new Gson();
+                JsonObject jsonObject = gson.fromJson(responseBody, JsonObject.class);
+
+                String key = "transfer_no";
+
+                if (jsonObject.has(key)) {
+                    String value = jsonObject.get(key).getAsString();
+                    System.out.println(key + " found: " + value);
+                } else {
+                    System.out.println(key + " not found");
+                }
+            } else {
+                System.out.println("Response body is not valid JSON.");
+            }
+        } catch (IOException | InterruptedException e) {
+            System.err.println("Error occurred: " + e.getMessage());
+        }
+    }
+
+    // Check if a string is valid JSON
+    private static boolean isValidJson(String json) {
+        try {
+            JsonElement jsonElement = JsonParser.parseString(json);
+            return jsonElement.isJsonObject() || jsonElement.isJsonArray();
+        } catch (JsonParseException e) {
+            return false;
+        }
+    }
+}
+```
+:::
+
 
 ### Important Information
 

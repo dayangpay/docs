@@ -76,6 +76,86 @@ curl -X POST \
 }
 ```
 
+### 如何判断是否下单成功？
+
+判断响应的HTTP 状态码是否是 `200` 或 `201`。或判断响应中是否存在某个字段，如：`transfer_no`。
+
+::: code-tabs
+
+@tab Java
+
+```java
+import com.google.gson.*;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
+public class HttpClientExample {
+    public static void main(String[] args) {
+        HttpClient client = HttpClient.newHttpClient();
+
+        // Create the request body (example, if needed, otherwise, you can remove this)
+        String requestBody = "{\"key\":\"value\"}";  // You can replace with actual data for POST request
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://example.com/api/v1/trades"))
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .build();
+
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            // Check if the HTTP status code is 200 ~ 299
+            int statusCode = response.statusCode();
+
+            if (statusCode >= 200 && statusCode <= 299) {
+                System.out.println("Success: " + statusCode);
+            } else {
+                System.out.println("Failed: " + statusCode);
+            }
+
+            // Check if a specific key exists in the JSON response, e.g., 'transfer_no'
+            String responseBody = response.body();
+            System.out.println("Response Body: " + responseBody);
+
+            if (isValidJson(responseBody)) {
+                Gson gson = new Gson();
+                JsonObject jsonObject = gson.fromJson(responseBody, JsonObject.class);
+
+                String key = "transfer_no";
+
+                if (jsonObject.has(key)) {
+                    String value = jsonObject.get(key).getAsString();
+                    System.out.println(key + " found: " + value);
+                } else {
+                    System.out.println(key + " not found");
+                }
+            } else {
+                System.out.println("Response body is not valid JSON.");
+            }
+        } catch (IOException | InterruptedException e) {
+            System.err.println("Error occurred: " + e.getMessage());
+        }
+    }
+
+    // Check if a string is valid JSON
+    private static boolean isValidJson(String json) {
+        try {
+            JsonElement jsonElement = JsonParser.parseString(json);
+            return jsonElement.isJsonObject() || jsonElement.isJsonArray();
+        } catch (JsonParseException e) {
+            return false;
+        }
+    }
+}
+```
+:::
+
 ### 重要信息
 
 ::: warning Important
