@@ -1,4 +1,4 @@
-name: docs
+name: Deploy VuePress 2 to GitHub Pages
 
 on:
   push:
