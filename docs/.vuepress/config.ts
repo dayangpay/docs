@@ -6,7 +6,7 @@ import { path } from 'vuepress/utils'
 import { navbar, navbarZh, sidebar, sidebarZh } from './configs'
 
 export default defineUserConfig({
-  base: '/',
+  base: process.env.NODE_ENV === 'production' ? '/docs/' : '/',
 
   locales: {
     '/': {
